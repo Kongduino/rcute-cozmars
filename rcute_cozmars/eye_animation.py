@@ -5,7 +5,7 @@ import random
 from . import util
 
 class EyeAnimation(util.Component):
-    """屏幕上的眼睛动画"""
+    """屏幕上的眼睛动画. Eye animation on screen"""
     def __init__(self, robot):
         util.Component.__init__(self, robot)
         self._exp_list = ['auto', 'happy', 'sad', 'surprised', 'angry', 'neutral', 'focused', 'sleepy']
@@ -19,7 +19,7 @@ class EyeAnimation(util.Component):
 
     @util.mode(property_type='setter')
     async def color(self, color=None):
-        """眼睛的颜色(BGR 模式)，默认是青色"""
+        """眼睛的颜色(BGR 模式)，默认是青色. Eye color (BGR mode), default is cyan."""
         if color:
             color = util.bgr(color)
             if color != self._color:
@@ -41,12 +41,12 @@ class EyeAnimation(util.Component):
 
     @property
     def expression_list(self):
-        """支持的表情列表， `['auto', 'happy', 'sad', 'surprised', 'angry', 'neutral', 'focused', 'sleepy']` ，只读"""
+        """支持的表情列表, list of supported emoticons `['auto', 'happy', 'sad', 'surprised', 'angry', 'neutral', 'focused', 'sleepy']` ，只读 read-only"""
         return list(self._exp_list)
 
     @util.mode(property_type='setter')
     async def expression(self, exp=None):
-        """表情，默认为 `'auto'`，即在所有的表情间随机切换"""
+        """表情，默认为 `auto`，即在所有的表情间随机切换. Emoji, the default is `auto`, that is, randomly switch between all emoticons."""
         if exp:
             exp, color = exp if type(exp)==tuple else (exp, None)
             if exp not in self.expression_list:
@@ -62,7 +62,7 @@ class EyeAnimation(util.Component):
 
     @util.mode()
     async def hide(self):
-        """隐藏"""
+        """隐藏. Hide."""
         if self._expression != 'hidden':
             if self._expression != 'stopped':
                 self._exp_before = self._expression
@@ -70,14 +70,14 @@ class EyeAnimation(util.Component):
 
     @util.mode()
     async def stop(self):
-        """暂停动态效果"""
+        """暂停动态效果. Pause animation."""
         if self._expression not in ['stopped', 'hidden']:
             self._exp_before = self._expression
             await self._set_exp('stopped', True)
 
     @util.mode()
     async def resume(self):
-        """继续动态更新"""
+        """继续动态更新. Resume update."""
         if self._expression == 'stopped':
             await self._set_exp(self._exp_before or 'auto')
             self._exp_before = None
@@ -98,7 +98,7 @@ class EyeAnimation(util.Component):
         await self._set_exp(exp or self._exp_before or 'auto')
         self._exp_before = None
 
-    # very urgly coded eye animation
+    # very ugly eye animation
     async def animate(self, robot, start_exp=None):
         self._canvas = np.zeros((134, 240, 3), np.uint8)
         self._ev = asyncio.Event()
